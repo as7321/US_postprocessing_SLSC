@@ -1,4 +1,4 @@
-function [sorted_idx, num_purefluids, num_cysts, num_mixed, num_benignsolids,num_highrisk, num_solids, categories] = sort_masses_journal_readerstudy_hd(result_file)
+function [sorted_idx, num_purefluids, num_cysts, num_fluids, num_benignsolids,num_highrisk, num_solids, categories] = sort_masses_journal_readerstudy_hd(result_file)
 
 %%% Include and sort only Journal masses
 num_files = size(result_file, 1);
@@ -24,14 +24,14 @@ for idx = idx_journal
 end
 num_purefluids = n-1;
 for idx = idx_journal
-    if cell2mat(result_file.masstype(result_file.idx==idx)) == "Complicated Cyst"
+    if cell2mat(result_file.masstype(result_file.idx==idx)) == "Complicated cyst"
         sorted_idx(n) = idx;
         %idx_complicatedcyst = [idx_complicatedcyst idx];
         categories(n) = "Complicated Cysts";
         n = n+1;
     end
 end
-num_cysts = n-1-num_purefluids;
+num_cysts = n-1;
 for idx = idx_journal
     if cell2mat(result_file.masstype(result_file.idx==idx)) == "Mixed"
         sorted_idx(n) = idx;
@@ -40,8 +40,7 @@ for idx = idx_journal
         n = n+1;
     end
 end
-num_mixed = n-1-num_purefluids - num_cysts;
-num_fluid = num_purefluids + num_cysts + num_mixed;
+num_fluids = n-1;
 for idx = idx_journal
     if cell2mat(result_file.masstype(result_file.idx==idx)) == "Benign Solid"
         sorted_idx(n) = idx;
@@ -50,7 +49,7 @@ for idx = idx_journal
         n = n+1;
     end
 end
-num_benignsolids = n - num_fluid -1;
+num_benignsolids = n - num_fluids -1;
 
 for idx = idx_journal
     if cell2mat(result_file.masstype(result_file.idx==idx)) == "High Risk"
@@ -60,7 +59,7 @@ for idx = idx_journal
         n = n+1;
     end
 end
-num_highrisk = n - num_fluid - num_benignsolids - 1;
+num_highrisk = n - num_benignsolids - 1;
 for idx = idx_journal
     if cell2mat(result_file.masstype(result_file.idx==idx)) == "Malignant Solid"
         sorted_idx(n) = idx;
@@ -69,4 +68,4 @@ for idx = idx_journal
         n = n+1;
     end
 end
-num_solids = n-num_fluid-num_benignsolids-num_highrisk -1;
+num_solids = n-num_fluids-num_benignsolids-num_highrisk -1;
